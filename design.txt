@@ -1,0 +1,33 @@
+case db
+  Name string
+  DOB date time
+  Phone number string
+  defendat insurance  arr of urls of pdf
+  accident location  text and arr of urls of pdf
+  accident description text 
+  injuries text
+  weather conditions text 
+  client signature string url
+
+CASE CONTROLLER
+
+Post createCase 
+Get getCase done
+Delete delCase
+Update setStatus
+get getStatus
+
+Get fetchCase   //download all case details
+Post createTask 
+Update editTask
+Get getTask
+Delete delTask
+
+
+
+PROVIDER CONTROLLER
+
+Post createProvider
+Update editProvider 
+Delete delProvider
+
