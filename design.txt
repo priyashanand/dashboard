@@ -31,3 +31,15 @@ Post createProvider
 Update editProvider 
 Delete delProvider
 
+
+TO-DO TOMMOROW
+
+in backend
+add archived ongoing to the case
+
+in frontend
+add del Task
+moveto accepted and archived case
+move  
+
+

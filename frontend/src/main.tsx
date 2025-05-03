@@ -1,14 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { SidebarProvider } from './context/SidebarContext.tsx'
-import { ThemeProvider } from './context/ThemeContext.tsx'
-import './index.css'
-import App from './App.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+// *** MODIFIED: Import BrowserRouter ***
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.tsx';
+import './index.css';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ThemeProvider>
-      <SidebarProvider><App/></SidebarProvider>
-    </ThemeProvider>
-  </StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    {/* *** MODIFIED: Wrap App with BrowserRouter *** */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+);
