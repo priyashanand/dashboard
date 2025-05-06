@@ -32,12 +32,31 @@ export interface FileInfo {
 export interface Case {
   _id?: string; // Optional ID, likely from the database
   // id: string; // Unique identifier (could be temporary or fallback)
-  name: string;
-  email?: string; // Added email field
-  phone?: string; // General contact   phone (used in list item if casePhone not available)
-  gender?: 'male' | 'female' | 'other' | string; // Added gender with more options
-  dob?: string; // Represent date as string for simplicity
-  streetAddress?: string; // Added street address
+  name: {
+    type: string;
+    indStatus:string
+  };
+  email?: {
+    type: string;
+    indStatus:string
+  };// Added email field
+  phone?: {
+    type: string;
+    indStatus:string
+  }; // General contact   phone (used in list item if casePhone not available)
+  // gender?: 'male' | 'female' | 'other' | string; // Added gender with more options
+  gender?: {
+    type:'male' | 'female' | 'other' | string,
+    indStatus:string
+  }
+    dob?:{
+    type: string;
+    indStatus:string
+  }; // Represent date as string for simplicity
+  streetAddress?: {
+    type: string;
+    indStatus:string
+  }; // Added street address
   status?: 'accepted' | 'archived' | 'inProcess' | string; // Added 'inProcess' and allow other string values
   tasks?: Task[]; // Added tasks array
   __v?: number; // Likely a version key from MongoDB
@@ -46,7 +65,7 @@ export interface Case {
 // Interface for tasks within a case
 export interface Task {
   taskTitle: string;
-  status: 'pending' | 'in-progress' | 'completed' | string; // Added more status options
+  indStatus: 'pending' | 'in-progress' | 'completed' | string; // Added more status options
   description?: string;
   docs?: string[];
   _id?: string;
@@ -132,14 +151,35 @@ export interface TableProps<T> {
 }
 
 export interface OngoingCaseCardProps {
-  caseData: OngoingCase;
+  caseData: Case;
 }
 
 export interface OngoingCase {
-  id: string;
-  name: string;
-  email?: string; // Added email field
-  phone?: string; // Format like MM/DD/YY
-  dob?: string; // Represent date as string for simplicity
-  streetAddress?: string;  // Allow other statuses too
+  _id?: string; // Optional ID, likely from the database
+  // id: string; // Unique identifier (could be temporary or fallback)
+  name: {
+    type: string;
+    indStatus:string
+  };
+  email?: {
+    type: string;
+    indStatus:string
+  };// Added email field
+  phone?: {
+    type: string;
+    indStatus:string
+  }; // General contact   phone (used in list item if casePhone not available)
+  // gender?: 'male' | 'female' | 'other' | string; // Added gender with more options
+  gender?: {
+    type:'male' | 'female' | 'other' | string,
+    indStatus:string
+  }
+    dob?:{
+    type: string;
+    indStatus:string
+  }; // Represent date as string for simplicity
+  streetAddress?: {
+    type: string;
+    indStatus:string
+  }; // Added street address
 }

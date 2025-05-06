@@ -2,6 +2,7 @@ import express, {Express, Request, Response} from "express"
 import mongoose from "mongoose";
 import caseRoutes from './routes/caseRoutes';
 import providerRoutes from './routes/providerRoutes'
+import lienRoutes from './routes/leinResolution'
 import dotenv from 'dotenv'; 
 import cors from "cors";
 dotenv.config();  
@@ -31,7 +32,7 @@ connectDB();
 
 app.use('/api', caseRoutes);
 app.use('/pro', providerRoutes);
-
+app.use('/lien', lienRoutes);
 
 app.listen(port, ()=>{
   console.log(`The server is running on port ${port}: http://localhost:${port}`)

@@ -93,24 +93,24 @@ export const CaseDetails: React.FC<CaseDetailsProps> = ({
                 setSelectedCase(null);
             }
 
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error deleting case:', error);
             //  Show error to user.
         }
     };
 
     const accordionSections: AccordionDetail[] = [
-        { id: 'name', title: 'Name', icon: User, status: selectedCase?.status || 'N/A' },
-        { id: 'email', title: 'Email', icon: ArrowBigDown, status: selectedCase?.status || 'N/A' },
-        { id: 'phone', title: 'Phone', icon: Phone, status: selectedCase?.status || 'N/A' },
-        { id: 'gender', title: 'Gender', icon: ArrowBigDown, status: selectedCase?.status || 'N/A' },
-        { id: 'dob', title: 'Date of Birth', icon: Calendar, status: selectedCase?.status || 'N/A' },
-        { id: 'streetAddress', title: 'Street Address', icon: MapPin, status: selectedCase?.status || 'N/A' },
+        { id: 'name', title: 'Name', icon: User, status: selectedCase?.name?.indStatus || 'N/A' },
+        { id: 'email', title: 'Email', icon: ArrowBigDown, status: selectedCase?.email?.indStatus || 'N/A' },
+        { id: 'phone', title: 'Phone', icon: Phone, status: selectedCase?.phone?.indStatus || 'N/A' },
+        { id: 'gender', title: 'Gender', icon: ArrowBigDown, status: selectedCase?.gender?.indStatus || 'N/A' },
+        { id: 'dob', title: 'Date of Birth', icon: Calendar, status: selectedCase?.dob?.indStatus || 'N/A' },
+        { id: 'streetAddress', title: 'Street Address', icon: MapPin, status: selectedCase?.streetAddress?.indStatus || 'N/A' },
         ...(selectedCase?.tasks?.map((task) => ({
             id: task._id || task.taskTitle,
             title: task.taskTitle,
             icon: ArrowBigDown,
-            status: task.status,
+            status: task.indStatus,
             type: 'task' // Add type property for task
         })) || []),
     ];
@@ -132,17 +132,17 @@ export const CaseDetails: React.FC<CaseDetailsProps> = ({
     const renderAccordionContent = (id: string) => {
         switch (id) {
             case 'name':
-                return <p>{selectedCase.name || 'N/A'}</p>;
+                return <p>{selectedCase.name?.type || 'N/A'}</p>;
             case 'email':
-                return <p>{selectedCase.email || 'N/A'}</p>;
+                return <p>{selectedCase.email?.type || 'N/A'}</p>;
             case 'phone':
-                return <p>{selectedCase.phone || 'N/A'}</p>;
+                return <p>{selectedCase.phone?.type || 'N/A'}</p>;
             case 'gender':
-                return <p>{selectedCase.gender || 'N/A'}</p>;
+                return <p>{selectedCase.gender?.type || 'N/A'}</p>;
             case 'dob':
-                return <p>{selectedCase.dob ? new Date(selectedCase.dob).toLocaleDateString() : 'N/A'}</p>;
+                return <p>{selectedCase.dob?.type ? new Date(selectedCase.dob?.type).toLocaleDateString() : 'N/A'}</p>;
             case 'streetAddress':
-                return <p>{selectedCase.streetAddress || 'N/A'}</p>;
+                return <p>{selectedCase.streetAddress?.type || 'N/A'}</p>;
             default: {
                 const task = selectedCase?.tasks?.find((t) => t._id === id || t.taskTitle === id);
                 if (task) {
@@ -189,7 +189,7 @@ export const CaseDetails: React.FC<CaseDetailsProps> = ({
             {/* Case Header Section */}
             <div className="flex flex-wrap justify-between items-center mb-6 pb-4 border-b border-gray-200 gap-2">
                 <div>
-                    <h2 className="text-xl font-semibold text-gray-800">{selectedCase?.name}</h2>
+                    <h2 className="text-xl font-semibold text-gray-800">{selectedCase?.name?.type}</h2>
                 </div>
                 <div className="flex items-center space-x-2 flex-shrink-0">
                     <button className="p-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 hover:border-gray-400 hover:text-gray-800 transition-colors">

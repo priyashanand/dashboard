@@ -17,9 +17,9 @@ export const CaseListItem: React.FC<CaseListItemProps> = ({ caseData, isSelected
     </div>
     {/* Name and Details */}
     <div className="flex-grow min-w-0">
-      <p className="text-sm font-medium text-gray-800 truncate">{caseData.name}</p>
+      <p className="text-sm font-medium text-gray-800 truncate">{caseData.name?.type}</p>
       {/* Display casePhone if available, otherwise fallback to general phone */}
-      <p className="text-xs text-gray-500 truncate">{caseData.phone ?? caseData.phone ?? 'No phone'}</p>
+      <p className="text-xs text-gray-500 truncate">{caseData.phone?.type ?? caseData.phone?.type ?? 'No phone'}</p>
     </div>
     {/* Status Indicator */}
     {caseData.status === 'active' && <div className="w-2.5 h-2.5 bg-green-500 rounded-full flex-shrink-0"></div>}

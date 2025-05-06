@@ -21,7 +21,7 @@ export const OngoingCaseCard: React.FC<OngoingCaseCardProps> = ({ caseData }) =>
             <div className='bg-slate-100 p-5 rounded-lg'>
                 {/* Card Header: Name and Arrow Icon */}
                 <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-base font-semibold text-gray-800">{caseData.name}</h3>
+                    <h3 className="text-base font-semibold text-gray-800">{caseData.name?.type}</h3>
                     {/* Link or button to view case details */}
                     <button className="text-gray-400 hover:text-blue-600">
                         <ArrowRight className="w-4 h-4" />
@@ -30,10 +30,10 @@ export const OngoingCaseCard: React.FC<OngoingCaseCardProps> = ({ caseData }) =>
 
                 {/* Card Body: Details */}
                 <div className="space-y-1.5 text-xs text-gray-600 ">
-                    <p>Email: <span className="font-medium text-gray-800">{caseData.email}</span></p>
-                    <p>Phone: <span className="font-medium text-gray-800">{caseData.phone}</span></p>
-                    <p>DOB: <span className="font-medium text-gray-800">{caseData.dob}</span></p>
-                    <p>Street Address: <span className="font-medium text-gray-800">{caseData.streetAddress}</span></p>
+                    <p>Email: <span className="font-medium text-gray-800">{caseData.email?.type}</span></p>
+                    <p>Phone: <span className="font-medium text-gray-800">{caseData.phone?.type}</span></p>
+                    <p>DOB: <span className="font-medium text-gray-800">{caseData.dob?.type}</span></p>
+                    <p>Street Address: <span className="font-medium text-gray-800">{caseData.streetAddress?.type}</span></p>
                 </div>
             </div>
         </div>

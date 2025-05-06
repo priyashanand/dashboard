@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { SearchInput } from '../common/SearchInput'; // Import SearchInput
-import { CaseListItem } from './CaseListItem'; // Import CaseListItem
-import type { CaseListProps, Case } from '../../types'; // Import props type
+import { SearchInput } from '../common/SearchInput';
+import { CaseListItem } from './CaseListItem';
+import type { CaseListProps, Case } from '../../types';
 
 const avatarBgColors = ['bg-indigo-500', 'bg-green-500', 'bg-orange-500', 'bg-blue-500'];
 
@@ -10,7 +10,7 @@ const avatarBgColors = ['bg-indigo-500', 'bg-green-500', 'bg-orange-500', 'bg-bl
  */
 export const CaseList: React.FC<CaseListProps> = ({ cases: initialCases, selectedCaseId, onSelectCase }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredCases, setFilteredCases] = useState<Case[]>([]); // Initialize as empty array
+    const [filteredCases, setFilteredCases] = useState<Case[]>([]);
 
     // Function to generate initials
     const getInitials = (name?: string): string => {
@@ -32,20 +32,19 @@ export const CaseList: React.FC<CaseListProps> = ({ cases: initialCases, selecte
         const newFilteredCases = initialCases
             .map(c => ({
                 ...c,
-                initials: getInitials(c.name),
-                avatarBgColor: getAvatarBgColor(c.name),
+                initials: getInitials(c.name?.type),
+                avatarBgColor: getAvatarBgColor(c.name?.type),
             }))
             .filter(c =>
-                c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (c.phone ?? '').toLowerCase().includes(searchTerm.toLowerCase())
-            );
+                c.name?.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (c.phone?.type ?? '').toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .filter(c => c.status === 'inProcess'); // Only show cases with status "in-progress"
         setFilteredCases(newFilteredCases);
     }, [searchTerm, initialCases]);
 
     return (
-        // Container for the case list - handles width and flex layout
         <div className="w-full md:w-2/5 lg:w-1/3 xl:w-1/4 border-r border-gray-200 flex flex-col h-full flex-shrink-0">
-            {/* Search Input Area */}
             <div className="p-4 border-b border-gray-200 flex-shrink-0">
                 <SearchInput
                     placeholder="Search..."
@@ -53,23 +52,18 @@ export const CaseList: React.FC<CaseListProps> = ({ cases: initialCases, selecte
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            {/* Scrollable List Area */}
             <div className="flex-grow overflow-y-auto p-2 space-y-1">
                 {filteredCases.length > 0 ? (
-                    filteredCases.map((caseItem) => {
-                        console.log(`Case ID in CaseList: ${caseItem._id}`);
-                        return (
-                            <CaseListItem
-                                key={caseItem._id}
-                                caseData={caseItem}
-                                isSelected={selectedCaseId === caseItem._id}
-                                onClick={() => onSelectCase(caseItem._id!)}
-                            />
-                        );
-                    })
-                ): (
-                    // Display message if no cases match the search
-                    <p className="text-sm text-gray-500 p-4 text-center">No cases found.</p>
+                    filteredCases.map((caseItem) => (
+                        <CaseListItem
+                            key={caseItem._id}
+                            caseData={caseItem}
+                            isSelected={selectedCaseId === caseItem._id}
+                            onClick={() => onSelectCase(caseItem._id!)}
+                        />
+                    ))
+                ) : (
+                    <p className="text-sm text-gray-500 p-4 text-center">No cases found with status "inProcess".</p>
                 )}
             </div>
         </div>

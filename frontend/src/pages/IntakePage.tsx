@@ -56,9 +56,11 @@ export const IntakePage: React.FC = () => {
     };
 
     const handleCaseCreated = useCallback((newCase: CaseType) => {
-        setCases(prevCases => [...prevCases, newCase]);
-        setSelectedCaseId(newCase._id);
-    }, []);
+        fetchCases(); // Refetch all cases
+        if (newCase._id !== undefined) {
+            setSelectedCaseId(newCase._id);
+        }
+    }, [fetchCases]);
 
     const selectedCase = cases.find(c => c._id === selectedCaseId) || null;
 

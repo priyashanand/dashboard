@@ -11,19 +11,44 @@ interface CreateCaseRequest extends Request {
 }
 
 // POST: Create a new case
-router.post('/createCase', async (req: CreateCaseRequest, res: Response) => {
+
+// router.post('/createCase', async (req: CreateCaseRequest, res: Response) => {
+//   try {
+//     const { name, email, phone, gender, dob, streetAddress } = req.body;
+//     const newCase = await Case.create({ name, email, phone, gender, dob, streetAddress });
+
+//     res.status(201).json({
+//       message: "Case created successfully",
+//       case: {
+//         _id: newCase._id,
+//         name: newCase.name,
+//         email: newCase.email,
+//         phone: newCase.phone,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error creating case:", error);
+//     res.status(500).json({ message: "Could not create the case" });
+//   }
+// });
+
+router.post('/createCase', async (req: Request, res: Response) => {
   try {
     const { name, email, phone, gender, dob, streetAddress } = req.body;
-    const newCase = await Case.create({ name, email, phone, gender, dob, streetAddress });
+
+    // Create a case object with the provided values or defaults, and set indStatus
+    const newCase = await Case.create({
+      name: name ? { type: name, indStatus: "completed" } : {},
+      email: email ? { type: email, indStatus: "completed" } : {},
+      phone: phone ? { type: phone, indStatus: "completed" } : {},
+      gender: gender ? { type: gender, indStatus: "completed" } : {},
+      dob: dob ? { type: dob, indStatus: "completed" } : {},
+      streetAddress: streetAddress ? { type: streetAddress, indStatus: "completed" } : {},
+    });
 
     res.status(201).json({
       message: "Case created successfully",
-      case: {
-        _id: newCase._id,
-        name: newCase.name,
-        email: newCase.email,
-        phone: newCase.phone,
-      },
+      case: newCase, // Include the entire newCase object in the response
     });
   } catch (error) {
     console.error("Error creating case:", error);
@@ -105,6 +130,44 @@ interface CreateTaskRequest extends Request {
 }
 
 // POST: Create a new task for a specific case
+// router.post('/createTask/:caseId', async (req: Request, res: Response) => {
+//   try {
+//     const { caseId } = req.params;
+
+//     // Validate the ObjectId format
+//     if (!mongoose.Types.ObjectId.isValid(caseId)) {
+//       res.status(400).json({ message: "Invalid case ID format" });
+//       return;
+//     }
+//     const { taskTitle, status = "in-progress", description = '', docs=[] } = req.body;
+    
+//     // Ensure that at least one of description or docs is provided
+//     if (!description && !docs) {
+//       res.status(400).json({ message: "Either description or docs must be provided" });
+//       return;
+//     }
+    
+//     const foundCase = await Case.findById(caseId);
+    
+//     if (!foundCase) {
+//       res.status(404).json({ message: "Case not found" });
+//       return;
+//     }
+    
+//     // Create task object with optional fields
+//     const newTask = { taskTitle, status, description, docs };
+    
+//     foundCase.tasks.push(newTask);
+//     console.log('1')
+//     await foundCase.save();
+    
+//     res.status(201).json({ message: "Task added successfully"});
+//   } catch (error) {
+//     console.error("Error creating task:", error);
+//     res.status(500).json({ message: "Could not create task" });
+//   }
+// });
+
 router.post('/createTask/:caseId', async (req: Request, res: Response) => {
   try {
     const { caseId } = req.params;
@@ -114,29 +177,34 @@ router.post('/createTask/:caseId', async (req: Request, res: Response) => {
       res.status(400).json({ message: "Invalid case ID format" });
       return;
     }
-    const { taskTitle, status = "in-progress", description = '', docs=[] } = req.body;
-    
+    const { taskTitle, status = "in-progress", description = '', docs = [] } = req.body;
+
     // Ensure that at least one of description or docs is provided
     if (!description && !docs) {
       res.status(400).json({ message: "Either description or docs must be provided" });
       return;
     }
-    
+
     const foundCase = await Case.findById(caseId);
-    
+
     if (!foundCase) {
       res.status(404).json({ message: "Case not found" });
       return;
     }
-    
+
     // Create task object with optional fields
-    const newTask = { taskTitle, status, description, docs };
-    
+    const newTask: ITask = {
+      _id: new mongoose.Types.ObjectId(), // Add this line to create an _id
+      taskTitle,
+      description,
+      indStatus: status, // Add this line, defaulting to the provided status
+      docs,
+    };
+
     foundCase.tasks.push(newTask);
-    console.log('1')
     await foundCase.save();
-    
-    res.status(201).json({ message: "Task added successfully"});
+
+    res.status(201).json({ message: "Task added successfully" });
   } catch (error) {
     console.error("Error creating task:", error);
     res.status(500).json({ message: "Could not create task" });
@@ -192,7 +260,7 @@ router.patch('/updateTasks/:caseId/:taskId', async (req: Request, res: Response)
     const taskToUpdate = foundCase.tasks[taskIndex];
 
     if (taskTitle) taskToUpdate.taskTitle = taskTitle;
-    if (status) taskToUpdate.status = status;
+    if (status) taskToUpdate.indStatus = status;
     if (description !== undefined) taskToUpdate.description = description; // Allow `undefined` to remove
     if (docs !== undefined) {
       if (!taskToUpdate.docs) {

@@ -35,7 +35,7 @@ Delete delProvider
 TO-DO TOMMOROW
 
 in backend
-add archived ongoing to the case
+lets not change it anymore the models
 
 in frontend
 add del Task

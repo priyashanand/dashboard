@@ -7,6 +7,7 @@ import { IntakePage } from './pages/IntakePage';
 import { ProvidersPage } from './pages/ProvidersPage';
 import { OngoingCasesPage } from './pages/OngoingCasesPage';
 import { ArchivedCasesPage } from './pages/ArchivedCasesPage'
+import { CasePage } from './pages/CasePage'
 // Import other page components as needed
 // import { OngoingCasesPage } from './pages/OngoingCasesPage'; // Example
 
@@ -35,7 +36,7 @@ const App: React.FC = () => {
             <Route path="/providers" element={<ProvidersPage />} />
             <Route path="/ongoing-cases" element={<OngoingCasesPage />} />
             <Route path="/archived-cases" element={<ArchivedCasesPage />} />
-
+            <Route path="/cases/:caseid" element={<CasePage />} />
           </Routes>
         </main>
       </div>

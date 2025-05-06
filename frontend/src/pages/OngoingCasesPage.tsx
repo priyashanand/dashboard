@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { SearchInput } from '../components/common/SearchInput';
-import { OngoingCaseCard } from '../components/case/OngoingCaseCard'; // Import the new card component
-import type { OngoingCase } from '../types'; // Import the OngoingCase type
+import { OngoingCaseCard } from '../components/case/OngoingCaseCard';
+import type { Case } from '../types'; // Import the Case type
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 /**
  * Ongoing Cases Page Component
@@ -11,29 +12,26 @@ import axios from 'axios';
  */
 export const OngoingCasesPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [ongoingCases, setOngoingCases] = useState<OngoingCase[]>([]);
+    const [ongoingCases, setOngoingCases] = useState<Case[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate(); // Initialize the navigate function
+
+
 
     useEffect(() => {
         const fetchOngoingCases = async () => {
             setLoading(true);
             setError(null);
             try {
-                const response = await axios.get<{ cases: any[] }>('http://localhost:3000/api/getCase');
-                const acceptedCases: OngoingCase[] = response.data.cases
-                    .filter(caseItem => caseItem.status === 'accepted')
-                    .map(caseItem => ({
-                        id: caseItem._id,
-                        name: caseItem.name,
-                        email: caseItem.email,
-                        phone: caseItem.phone,
-                        dob: caseItem.dob ? new Date(caseItem.dob).toLocaleDateString() : 'N/A',
-                        streetAddress: caseItem.streetAddress || 'N/A',
-                        // Add any other relevant properties from your Case type to OngoingCase
-                    }));
+                const response = await axios.get<{ cases: Case[] }>('http://localhost:3000/api/getCase');
+                const acceptedCases: Case[] = response.data.cases.filter(
+                    (caseItem) => caseItem.status === 'accepted'
+                );
+                console.log(response.data.cases[0]._id)
+    
                 setOngoingCases(acceptedCases);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching ongoing cases:', err);
                 setError('Failed to load ongoing cases.');
             } finally {
@@ -51,9 +49,14 @@ export const OngoingCasesPage: React.FC = () => {
         }
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
         return ongoingCases.filter(c =>
-            c.name.toLowerCase().includes(lowerCaseSearchTerm)
+            c.name?.type.toLowerCase().includes(lowerCaseSearchTerm)
         );
     }, [searchTerm, ongoingCases]);
+
+    // Function to navigate to the case details page
+    const handleCardClick = (caseId: string) => {
+        navigate(`/cases/${caseId}`);
+    };
 
     if (loading) {
         return <div className="p-6 bg-white h-full flex items-center justify-center">Loading ongoing cases...</div>;
@@ -97,7 +100,13 @@ export const OngoingCasesPage: React.FC = () => {
                 {filteredCases.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5 p-3"> {/* Responsive grid */}
                         {filteredCases.map((caseData) => (
-                            <OngoingCaseCard key={caseData.id} caseData={caseData} />
+                            <div
+                                key={caseData._id}
+                                onClick={() => handleCardClick(caseData._id)} // Handle card click
+                                className="cursor-pointer hover:scale-[1.02] transition-transform"
+                            >
+                                <OngoingCaseCard caseData={caseData} />
+                            </div>
                         ))}
                     </div>
                 ) : (
